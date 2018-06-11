@@ -30,9 +30,10 @@ public class MainActivity extends AppCompatActivity {
         btnhit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                HttpURLConnection connection = null;
+                BufferedReader reader = null;
                 try {
-                    HttpURLConnection connection = null;
-                    BufferedReader reader = null;
+
                     URL url;
                     url = new URL("http://my-json-server.typicode.com/colt005/jsondemo/posts/1");
                     connection = (HttpURLConnection) url.openConnection();
