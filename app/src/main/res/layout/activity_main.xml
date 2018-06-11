@@ -11,7 +11,7 @@
         android:id="@+id/btnhit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:onClick="excc"
+        android:onClick="Hitt"
         android:text="HIT" />
     <TextView
         android:layout_width="wrap_content"

@@ -26,48 +26,54 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Button btnhit = (Button) (findViewById(R.id.btnhit));
         final TextView tvdata = (TextView) (findViewById(R.id.tvJSONItem));
-        HttpURLConnection connection = null;
-        BufferedReader reader = null;
-        URL url;
-        public void excc(View v) {
 
-            try {
-                url = new URL("http://my-json-server.typicode.com/colt005/jsondemo/posts/1");
-                connection = (HttpURLConnection) url.openConnection();
-                connection.connect();
-
-                InputStream stream = connection.getInputStream();
-
-                reader = new BufferedReader(new InputStreamReader(stream));
-                String line = "";
-                StringBuffer buffer = new StringBuffer();
-
-                while ((line = reader.readLine()) != null) {
-
-                    buffer.append(line);
-
-                }
-                tvdata.setText(buffer.toString());
-
-
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            } finally {
-                if (connection != null) {
-                    connection.disconnect();
-                }
+        btnhit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
                 try {
-                    if (reader != null) {
-                        reader.close();
+                    HttpURLConnection connection = null;
+                    BufferedReader reader = null;
+                    URL url;
+                    url = new URL("http://my-json-server.typicode.com/colt005/jsondemo/posts/1");
+                    connection = (HttpURLConnection) url.openConnection();
+                    connection.connect();
+
+                    InputStream stream = connection.getInputStream();
+
+                    reader = new BufferedReader(new InputStreamReader(stream));
+                    String line = " ";
+                    StringBuffer buffer = new StringBuffer();
+
+                    while ((line = reader.readLine()) != null) {
+
+                        buffer.append(line);
+
                     }
+                    tvdata.setText(buffer.toString());
+
+
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
                 } catch (IOException e) {
                     e.printStackTrace();
+                } finally {
+                    if (connection != null) {
+                        connection.disconnect();
+                    }
+                    try {
+                        if (reader != null) {
+                            reader.close();
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
-            }
 
-        }
+
+
+            }
+        });
+
 
     }
     }
