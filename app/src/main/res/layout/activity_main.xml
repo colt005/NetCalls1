@@ -11,16 +11,17 @@
         android:id="@+id/btnhit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:onClick="Hitt"
         android:text="HIT" />
+
     <TextView
+        android:id="@+id/tvJSONItem"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Hello World!"
-        android:id="@+id/tvJSONItem"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:paddingTop="20sp"/>
 
 </LinearLayout>
