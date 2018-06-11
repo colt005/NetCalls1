@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
         public void excc(View v) {
 
             try {
-                url = new URL("URL");
+                url = new URL("http://my-json-server.typicode.com/colt005/jsondemo/posts/1");
                 connection = (HttpURLConnection) url.openConnection();
                 connection.connect();
 
