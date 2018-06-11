@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
         HttpURLConnection connection = null;
         BufferedReader reader = null;
         URL url;
-        public excc(View) {
+        public void excc(View v) {
 
             try {
                 url = new URL("URL");
