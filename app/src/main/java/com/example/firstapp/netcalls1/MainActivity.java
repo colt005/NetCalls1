@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                new JSONtask().execute("https://jsonparsingdemo-cec5b.firebaseapp.com/jsonData/moviesDemoItem.txt");
+                new JSONtask().execute("https://jsonparsingdemo-cec5b.firebaseapp.com/jsonData/moviesDemoList.txt");
 
 
             }
@@ -79,11 +79,18 @@ public class MainActivity extends AppCompatActivity {
                 String finalJSON = buffer.toString();
                 JSONObject parentobject = new JSONObject(finalJSON);
                 JSONArray parentaray = parentobject.getJSONArray("movies");
-                JSONObject finalobject = parentaray.getJSONObject(0);
 
-                String moviename = finalobject.getString("movie");
-                int year = finalobject.getInt("year");
-                return moviename + " - " + year;
+                StringBuffer finalBuffureddata = new StringBuffer();
+                for(int i=0;i<parentaray.length();i++){
+
+                    JSONObject finalobject = parentaray.getJSONObject(i);
+                    String moviename = finalobject.getString("movie");
+                    int year = finalobject.getInt("year");
+                    finalBuffureddata.append(moviename + " - " +year+ "\n");
+
+                }
+
+                return finalBuffureddata.toString();
 
             } catch (MalformedURLException e) {
                 e.printStackTrace();
