@@ -7,6 +7,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -34,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                new JSONtask().execute("http://my-json-server.typicode.com/colt005/jsondemo/posts/1");
+                new JSONtask().execute("https://jsonparsingdemo-cec5b.firebaseapp.com/jsonData/moviesDemoItem.txt");
 
 
             }
@@ -72,12 +76,20 @@ public class MainActivity extends AppCompatActivity {
                     buffer.append(line);
 
                 }
+                String finalJSON = buffer.toString();
+                JSONObject parentobject = new JSONObject(finalJSON);
+                JSONArray parentaray = parentobject.getJSONArray("movies");
+                JSONObject finalobject = parentaray.getJSONObject(0);
 
-                return buffer.toString();
+                String moviename = finalobject.getString("movie");
+                int year = finalobject.getInt("year");
+                return moviename + " - " + year;
 
             } catch (MalformedURLException e) {
                 e.printStackTrace();
             } catch (IOException e) {
+                e.printStackTrace();
+            } catch (JSONException e) {
                 e.printStackTrace();
             } finally {
                 if (connection != null) {
