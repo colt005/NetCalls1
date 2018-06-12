@@ -5,7 +5,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.TextView;
+
+import com.example.firstapp.netcalls1.models.MovieModel;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -18,9 +21,8 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.sql.Connection;
-
-import static android.icu.lang.UCharacter.GraphemeClusterBreak.V;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -31,31 +33,20 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Button btnhit = (Button) (findViewById(R.id.btnhit));
-        tvdata = (TextView) (findViewById(R.id.tvJSONItem));
+        ListView lvMovies = (ListView) findViewById(R.id.lvmovies);
 
-        btnhit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                new JSONtask().execute("https://jsonparsingdemo-cec5b.firebaseapp.com/jsonData/moviesDemoList.txt");
-
-
-            }
-        });
-
-
+        new JSONtask().execute("https://jsonparsingdemo-cec5b.firebaseapp.com/jsonData/moviesData.txt");
     }
 
 
-    public class JSONtask extends AsyncTask<String, String, String>
+    public class JSONtask extends AsyncTask< String, String, List<MovieModel> >
     {
 
 
 
 
         @Override
-        protected String doInBackground(String... urls) {
+        protected List<MovieModel> doInBackground(String... urls) {
             HttpURLConnection connection = null;
             BufferedReader reader = null;
             try {
@@ -80,17 +71,36 @@ public class MainActivity extends AppCompatActivity {
                 JSONObject parentobject = new JSONObject(finalJSON);
                 JSONArray parentaray = parentobject.getJSONArray("movies");
 
-                StringBuffer finalBuffureddata = new StringBuffer();
-                for(int i=0;i<parentaray.length();i++){
+                List<MovieModel> moviemodellist = new ArrayList<>();
 
+                for(int i=0;i<parentaray.length();i++){
                     JSONObject finalobject = parentaray.getJSONObject(i);
-                    String moviename = finalobject.getString("movie");
-                    int year = finalobject.getInt("year");
-                    finalBuffureddata.append(moviename + " - " +year+ "\n");
+                    MovieModel movieModel = new MovieModel();
+                    movieModel.setMovie(finalobject.getString("movie"));
+                    movieModel.setYear(finalobject.getInt("year"));
+                    movieModel.setRating((float)finalobject.getDouble("rating"));
+                    movieModel.setDirector(finalobject.getString("director"));
+
+                    movieModel.setDuration(finalobject.getString("duration"));
+                    movieModel.setTagline(finalobject.getString("tagline"));
+                    movieModel.setImage(finalobject.getString("image"));
+                    movieModel.setStory(finalobject.getString("story"));
+
+                    List<MovieModel.cast> castlist = new ArrayList<>();
+                    for (int j=0;j<finalobject.getJSONArray("cast").length();j++){
+                        MovieModel.cast Cast = new MovieModel.cast();
+                        Cast.setName(finalobject.getJSONArray("cast").getJSONObject(j).getString("name"));
+                        castlist.add(Cast);
+                    }
+                        movieModel.setCastlist(castlist);
+                    //adding final object to the list
+                        moviemodellist.add(movieModel);
+
+                    //finalBuffureddata.append(moviename + " - " +year+ "\n");
 
                 }
 
-                return finalBuffureddata.toString();
+                return moviemodellist;
 
             } catch (MalformedURLException e) {
                 e.printStackTrace();
@@ -115,9 +125,9 @@ public class MainActivity extends AppCompatActivity {
         }
 
         @Override
-        protected void onPostExecute(String result) {
+        protected void onPostExecute(List<MovieModel> result) {
             super.onPostExecute(result);
-            tvdata.setText(result);
+           //TODO
         }
     }
 }
