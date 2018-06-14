@@ -37,14 +37,23 @@ public class MainActivity extends AppCompatActivity {
 
     private TextView tvdata;
     private ListView lvMovies;
+    private Button btn1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        lvMovies = (ListView) findViewById(R.id.lvmovies);
-        new JSONtask().execute("https://jsonparsingdemo-cec5b.firebaseapp.com/jsonData/moviesData.txt");
+        btn1 = (Button) findViewById(R.id.btn1);
+
+        btn1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                setContentView(R.layout.activity_main);
+                lvMovies = (ListView) findViewById(R.id.lvmovies);
+                new JSONtask().execute("https://jsonparsingdemo-cec5b.firebaseapp.com/jsonData/moviesData.txt");
+                btn1.setVisibility(View.GONE);
+            }
+        });
 
 
     }
