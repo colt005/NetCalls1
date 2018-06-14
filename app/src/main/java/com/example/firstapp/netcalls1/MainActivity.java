@@ -203,7 +203,7 @@ public class MainActivity extends AppCompatActivity {
             tvStory.setText(movieModelList.get(position).getStory());
 
 
-            return convertView;
+            return convertView;  
         }
     }
 
