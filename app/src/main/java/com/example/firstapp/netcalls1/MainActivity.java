@@ -1,11 +1,19 @@
 package com.example.firstapp.netcalls1;
 
+import android.content.Context;
 import android.os.AsyncTask;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.example.firstapp.netcalls1.models.MovieModel;
@@ -28,14 +36,17 @@ public class MainActivity extends AppCompatActivity {
 
 
     private TextView tvdata;
+    private ListView lvMovies;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        ListView lvMovies = (ListView) findViewById(R.id.lvmovies);
-
+        lvMovies = (ListView) findViewById(R.id.lvmovies);
         new JSONtask().execute("https://jsonparsingdemo-cec5b.firebaseapp.com/jsonData/moviesData.txt");
+
+
     }
 
 
@@ -127,7 +138,73 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(List<MovieModel> result) {
             super.onPostExecute(result);
+            MovieAdapter adapter = new MovieAdapter(getApplicationContext(), R.layout.row, result);
+            lvMovies.setAdapter(adapter);
            //TODO
         }
     }
+
+    public class MovieAdapter extends ArrayAdapter{
+
+        private List<MovieModel> movieModelList;
+        private int resource;
+        private LayoutInflater inflater;
+        public MovieAdapter(@NonNull Context context, int resource, @NonNull List<MovieModel> objects) {
+            super(context, resource, objects);
+            movieModelList = objects;
+            this.resource = resource;
+            inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
+
+        }
+
+        @NonNull
+        @Override
+        public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+
+            if(convertView == null) {
+                convertView = inflater.inflate(resource, null);
+            }
+            ImageView ivMovieIcon;
+            TextView tvMovie;
+            TextView tvTagline;
+            TextView tvYear;
+            TextView tvDuration;
+            TextView tvDirector;
+
+            RatingBar rbMovieRating;
+            TextView tvCast;
+            TextView tvStory;
+
+            ivMovieIcon = (ImageView)convertView.findViewById(R.id.ivicon);
+            tvMovie = (TextView)convertView.findViewById(R.id.tvmovie);
+            tvTagline = (TextView)convertView.findViewById(R.id.tvTagline);
+            tvYear = (TextView)convertView.findViewById(R.id.tvYear);
+            tvDuration = (TextView)convertView.findViewById(R.id.tvDuration);
+            tvDirector = (TextView)convertView.findViewById(R.id.tvDirector);
+            rbMovieRating = (RatingBar) convertView.findViewById(R.id.rbMovie);
+            tvCast = (TextView)convertView.findViewById(R.id.tvCast);
+            tvStory = (TextView)convertView.findViewById(R.id.tvStory);
+
+            tvMovie.setText(movieModelList.get(position).getMovie());
+            tvTagline.setText("Year : "+movieModelList.get(position).getTagline());
+            tvYear.setText(movieModelList.get(position).getYear());
+            tvDuration.setText(movieModelList.get(position).getDuration());
+            tvDirector.setText(movieModelList.get(position).getDirector());
+            rbMovieRating.setRating(movieModelList.get(position).getRating()/2);
+
+
+            StringBuffer stringBuffer = new StringBuffer();
+            for(MovieModel.cast casts : movieModelList.get(position).getCastlist())
+            {
+                stringBuffer.append(casts.getName() + ",");
+
+            }
+            tvCast.setText(stringBuffer);
+            tvStory.setText(movieModelList.get(position).getStory());
+
+
+            return convertView;
+        }
+    }
+
 }
